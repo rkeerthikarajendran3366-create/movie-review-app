@@ -1,220 +1,351 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import movies from "./movies";
 
 function App() {
-
-  const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
-  const [ratingFilter, setRatingFilter] = useState(0);
+  const [genreFilter, setGenreFilter] = useState("All");
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [review, setReview] = useState("");
+
+  const [reviews, setReviews] = useState([
+    {
+      movie: "Avatar",
+      text: "Amazing movie! ⭐⭐⭐⭐⭐",
+    },
+    {
+      movie: "Titanic",
+      text: "Beautiful love story ❤️",
+    },
+    {
+      movie: "Bahubali",
+      text: "Epic action scenes 🔥",
+    },
+  ]);
+
   const [userRatings, setUserRatings] = useState({});
 
-  const API_KEY = "a697302a143030d3a6ec9b82fe0ea329";
+  const addReview = () => {
+    if (!review.trim()) return;
 
-  useEffect(() => {
+    setReviews([
+      ...reviews,
+      {
+        movie: selectedMovie.title,
+        text: review,
+      },
+    ]);
 
-    fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setMovies(data.results);
-      });
-
-  }, []);
+    setReview("");
+  };
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
         padding: "20px",
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        background:
+          "linear-gradient(to right,#141E30,#243B55)",
         color: "white",
       }}
     >
-
       <h1
-  style={{
-    fontSize: "55px",
-    textAlign: "center",
-    marginBottom: "20px",
-    color: "#FFD700",
-    textShadow: "3px 3px 10px black",
-    fontWeight: "bold",
-  }}
->
-  🎬 Movie Review App
-</h1>
-
-      <input
-        type="text"
-        placeholder="Search movie..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
         style={{
-          padding: "10px",
-          width: "300px",
-          borderRadius: "10px",
-          border: "none",
-          fontSize: "16px",
-        }}
-      />
-
-      <select
-        onChange={(e) =>
-          setRatingFilter(e.target.value)
-        }
-        style={{
-          padding: "10px",
-          marginLeft: "10px",
-          borderRadius: "10px",
+          textAlign: "center",
+          color: "#FFD700",
+          fontSize: "60px",
+          marginBottom: "10px",
         }}
       >
+        🎬 Movie Review App
+      </h1>
 
-        <option value="0">
-          All Ratings
-        </option>
+      <p
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+        }}
+      >
+        Browse Movies • Read Reviews • Rate Movies
+      </p>
 
-        <option value="5">
-          5+
-        </option>
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Search Movie..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          style={{
+            padding: "10px",
+            width: "250px",
+            borderRadius: "10px",
+          }}
+        />
 
-        <option value="7">
-          7+
-        </option>
-
-        <option value="8">
-          8+
-        </option>
-
-      </select>
+        <select
+          value={genreFilter}
+          onChange={(e) =>
+            setGenreFilter(e.target.value)
+          }
+          style={{
+            padding: "10px",
+            marginLeft: "10px",
+            borderRadius: "10px",
+          }}
+        >
+          <option value="All">
+            All Movies
+          </option>
+          <option value="Action">
+            Action
+          </option>
+          <option value="Comedy">
+            Comedy
+          </option>
+          <option value="Romance">
+            Romance
+          </option>
+          <option value="Sci-Fi">
+            Sci-Fi
+          </option>
+          <option value="Animation">
+            Animation
+          </option>
+          <option value="Drama">
+            Drama
+          </option>
+        </select>
+      </div>
 
       {selectedMovie && (
-
         <div
           style={{
-            backgroundColor: "rgba(0,0,0,0.8)",
+            backgroundColor: "#222",
             padding: "20px",
             borderRadius: "15px",
-            marginTop: "20px",
             marginBottom: "20px",
           }}
         >
+          <button
+            onClick={() =>
+              setSelectedMovie(null)
+            }
+            style={{
+              padding: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            ⬅ Back
+          </button>
 
-          <h2>
+          <h2
+            style={{
+              color: "#FFD700",
+            }}
+          >
             {selectedMovie.title}
           </h2>
 
+          <img
+            src={selectedMovie.image}
+            alt={selectedMovie.title}
+            style={{
+              width: "250px",
+              borderRadius: "10px",
+            }}
+          />
+
           <p>
-            Release Date:
-            {selectedMovie.release_date}
+            <strong>Release Year:</strong>{" "}
+            {selectedMovie.year}
           </p>
 
           <p>
-            Rating:
-            {selectedMovie.vote_average}
+            <strong>Genre:</strong>{" "}
+            {selectedMovie.genre}
           </p>
 
           <p>
-            {selectedMovie.overview}
+            <strong>IMDb Rating:</strong>{" "}
+            {selectedMovie.rating}/10
           </p>
 
+          <p>
+            <strong>Director:</strong>{" "}
+            {selectedMovie.director}
+          </p>
+
+          <p>
+            <strong>Cast:</strong>{" "}
+            {selectedMovie.cast}
+          </p>
+
+          <p>
+            <strong>Duration:</strong>{" "}
+            {selectedMovie.duration}
+          </p>
+
+          <h3>Story</h3>
+
+          <p>
+            {selectedMovie.description}
+          </p>
+
+          <hr />
+
+          <h3>Write Review</h3>
+
+          <textarea
+            value={review}
+            onChange={(e) =>
+              setReview(e.target.value)
+            }
+            rows="4"
+            style={{
+              width: "100%",
+            }}
+          />
+
+          <br />
+          <br />
+
+          <button onClick={addReview}>
+            Submit Review
+          </button>
+
+          <h3>Reviews</h3>
+
+          {reviews
+            .filter(
+              (r) =>
+                r.movie ===
+                selectedMovie.title
+            )
+            .map((r, index) => (
+              <p key={index}>
+                {r.text}
+              </p>
+            ))}
         </div>
-
       )}
 
       <div
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(200px, 1fr))",
+            "repeat(auto-fit,minmax(250px,1fr))",
           gap: "20px",
-          marginTop: "30px",
         }}
       >
-
         {movies
           .filter(
             (movie) =>
               movie.title
                 .toLowerCase()
-                .includes(search.toLowerCase()) &&
-              movie.vote_average >= ratingFilter
+                .includes(
+                  search.toLowerCase()
+                ) &&
+              (genreFilter === "All" ||
+                movie.genre ===
+                  genreFilter)
           )
           .map((movie) => (
-
             <div
               key={movie.id}
-              onClick={() =>
-                setSelectedMovie(movie)
-              }
               style={{
                 backgroundColor:
                   "rgba(0,0,0,0.7)",
-                borderRadius: "15px",
                 padding: "15px",
-                cursor: "pointer",
+                borderRadius: "15px",
               }}
             >
-
               <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                src={movie.image}
                 alt={movie.title}
-                width="100%"
                 style={{
+                  width: "100%",
+                  height: "350px",
+                  objectFit: "cover",
                   borderRadius: "10px",
                 }}
               />
 
-              <h3>
+              <h2
+                style={{
+                  color: "#FFD700",
+                }}
+              >
                 {movie.title}
-              </h3>
+              </h2>
 
               <p>
-                ⭐ {movie.vote_average}
+                {movie.genre}
+              </p>
+
+              <p>
+                ⭐ {movie.rating}/10
               </p>
 
               <div>
-
-                {[1, 2, 3, 4, 5].map((star) => (
-
-                  <span
-                    key={star}
-
-                    onClick={() =>
-                      setUserRatings({
-                        ...userRatings,
-                        [movie.id]: star,
-                      })
-                    }
-
-                    style={{
-                      cursor: "pointer",
-                      fontSize: "25px",
-                      color:
-                        userRatings[movie.id] >= star
-                          ? "gold"
-                          : "gray",
-                    }}
-                  >
-                    ★
-                  </span>
-
-                ))}
-
+                {[1, 2, 3, 4, 5].map(
+                  (star) => (
+                    <span
+                      key={star}
+                      onClick={() =>
+                        setUserRatings({
+                          ...userRatings,
+                          [movie.id]:
+                            star,
+                        })
+                      }
+                      style={{
+                        cursor:
+                          "pointer",
+                        fontSize:
+                          "28px",
+                        color:
+                          userRatings[
+                            movie.id
+                          ] >= star
+                            ? "gold"
+                            : "gray",
+                      }}
+                    >
+                      ★
+                    </span>
+                  )
+                )}
               </div>
 
+              <button
+                onClick={() =>
+                  setSelectedMovie(
+                    movie
+                  )
+                }
+                style={{
+                  width: "100%",
+                  marginTop: "10px",
+                  padding: "10px",
+                  backgroundColor:
+                    "#FFD700",
+                  border: "none",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                }}
+              >
+                Review Movie
+              </button>
             </div>
-
           ))}
-
       </div>
-
     </div>
-
   );
 }
 
