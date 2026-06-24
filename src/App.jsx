@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import movies from "./movies";
 
 function App() {
@@ -7,13 +7,44 @@ function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [review, setReview] = useState("");
 
-  const [reviews, setReviews] = useState([
-    { movie: "Avatar", text: "Amazing movie! ⭐⭐⭐⭐⭐" },
-    { movie: "Titanic", text: "Beautiful love story ❤️" },
-    { movie: "Bahubali", text: "Epic action scenes 🔥" },
-  ]);
+  // Load Reviews from Local Storage
+  const [reviews, setReviews] = useState(() => {
+    const savedReviews = localStorage.getItem("reviews");
 
-  const [userRatings, setUserRatings] = useState({});
+    return savedReviews
+      ? JSON.parse(savedReviews)
+      : [
+          {
+            movie: "Avatar",
+            text: "Amazing movie! ⭐⭐⭐⭐⭐",
+          },
+        ];
+  });
+
+  // Load Ratings from Local Storage
+  const [userRatings, setUserRatings] = useState(() => {
+    const savedRatings = localStorage.getItem("ratings");
+
+    return savedRatings
+      ? JSON.parse(savedRatings)
+      : {};
+  });
+
+  // Save Reviews
+  useEffect(() => {
+    localStorage.setItem(
+      "reviews",
+      JSON.stringify(reviews)
+    );
+  }, [reviews]);
+
+  // Save Ratings
+  useEffect(() => {
+    localStorage.setItem(
+      "ratings",
+      JSON.stringify(userRatings)
+    );
+  }, [userRatings]);
 
   const addReview = () => {
     if (!review.trim()) return;
@@ -31,8 +62,11 @@ function App() {
 
   const filteredMovies = movies.filter(
     (movie) =>
-      movie.title.toLowerCase().includes(search.toLowerCase()) &&
-      (genreFilter === "All" || movie.genre === genreFilter)
+      movie.title
+        .toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (genreFilter === "All" ||
+        movie.genre === genreFilter)
   );
 
   return (
@@ -40,7 +74,8 @@ function App() {
       style={{
         minHeight: "100vh",
         padding: "20px",
-        background: "linear-gradient(to right,#141E30,#243B55)",
+        background:
+          "linear-gradient(to right,#141E30,#243B55)",
         color: "white",
       }}
     >
@@ -70,7 +105,9 @@ function App() {
               type="text"
               placeholder="Search Movie..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
               style={{
                 padding: "10px",
                 width: "250px",
@@ -80,20 +117,36 @@ function App() {
 
             <select
               value={genreFilter}
-              onChange={(e) => setGenreFilter(e.target.value)}
+              onChange={(e) =>
+                setGenreFilter(e.target.value)
+              }
               style={{
                 padding: "10px",
                 marginLeft: "10px",
                 borderRadius: "10px",
               }}
             >
-              <option value="All">All Movies</option>
-              <option value="Action">Action</option>
-              <option value="Comedy">Comedy</option>
-              <option value="Romance">Romance</option>
-              <option value="Sci-Fi">Sci-Fi</option>
-              <option value="Animation">Animation</option>
-              <option value="Drama">Drama</option>
+              <option value="All">
+                All Movies
+              </option>
+              <option value="Action">
+                Action
+              </option>
+              <option value="Comedy">
+                Comedy
+              </option>
+              <option value="Romance">
+                Romance
+              </option>
+              <option value="Sci-Fi">
+                Sci-Fi
+              </option>
+              <option value="Animation">
+                Animation
+              </option>
+              <option value="Drama">
+                Drama
+              </option>
             </select>
           </div>
 
@@ -109,7 +162,8 @@ function App() {
               <div
                 key={movie.id}
                 style={{
-                  backgroundColor: "rgba(0,0,0,0.7)",
+                  backgroundColor:
+                    "rgba(0,0,0,0.7)",
                   padding: "15px",
                   borderRadius: "15px",
                 }}
@@ -125,45 +179,58 @@ function App() {
                   }}
                 />
 
-                <h2 style={{ color: "#FFD700" }}>
+                <h2
+                  style={{
+                    color: "#FFD700",
+                  }}
+                >
                   {movie.title}
                 </h2>
 
                 <p>{movie.genre}</p>
 
-                <p>⭐ {movie.rating}/10</p>
+                <p>
+                  ⭐ {movie.rating}/10
+                </p>
 
                 <div>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      onClick={() =>
-                        setUserRatings({
-                          ...userRatings,
-                          [movie.id]: star,
-                        })
-                      }
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "28px",
-                        color:
-                          userRatings[movie.id] >= star
-                            ? "gold"
-                            : "gray",
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
+                  {[1, 2, 3, 4, 5].map(
+                    (star) => (
+                      <span
+                        key={star}
+                        onClick={() =>
+                          setUserRatings({
+                            ...userRatings,
+                            [movie.id]: star,
+                          })
+                        }
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "28px",
+                          color:
+                            userRatings[
+                              movie.id
+                            ] >= star
+                              ? "gold"
+                              : "gray",
+                        }}
+                      >
+                        ★
+                      </span>
+                    )
+                  )}
                 </div>
 
                 <button
-                  onClick={() => setSelectedMovie(movie)}
+                  onClick={() =>
+                    setSelectedMovie(movie)
+                  }
                   style={{
                     width: "100%",
                     marginTop: "10px",
                     padding: "10px",
-                    backgroundColor: "#FFD700",
+                    backgroundColor:
+                      "#FFD700",
                     border: "none",
                     borderRadius: "10px",
                     cursor: "pointer",
@@ -186,7 +253,9 @@ function App() {
           }}
         >
           <button
-            onClick={() => setSelectedMovie(null)}
+            onClick={() =>
+              setSelectedMovie(null)
+            }
             style={{
               padding: "10px",
               marginBottom: "20px",
@@ -195,7 +264,11 @@ function App() {
             ⬅ Back to Home
           </button>
 
-          <h2 style={{ color: "#FFD700" }}>
+          <h2
+            style={{
+              color: "#FFD700",
+            }}
+          >
             {selectedMovie.title}
           </h2>
 
@@ -209,18 +282,13 @@ function App() {
           />
 
           <p>
-            <strong>Release Year:</strong>{" "}
+            <strong>Year:</strong>{" "}
             {selectedMovie.year}
           </p>
 
           <p>
             <strong>Genre:</strong>{" "}
             {selectedMovie.genre}
-          </p>
-
-          <p>
-            <strong>IMDb Rating:</strong>{" "}
-            {selectedMovie.rating}/10
           </p>
 
           <p>
@@ -238,35 +306,37 @@ function App() {
             {selectedMovie.duration}
           </p>
 
+          <p>
+            <strong>IMDb:</strong>{" "}
+            {selectedMovie.rating}/10
+          </p>
+
           <h3>Story</h3>
 
-          <p>{selectedMovie.description}</p>
-          <div style={{ marginTop: "20px" }}>
-            <a
-              href={selectedMovie.trailer}
-              target="_blank"
-              rel="noreferrer"
+          <p>
+            {selectedMovie.description}
+          </p>
+
+          {selectedMovie.trailer && (
+            <button
+              onClick={() =>
+                window.open(
+                  selectedMovie.trailer,
+                  "_blank"
+                )
+              }
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+              }}
             >
-              <button
-  onClick={() =>
-    window.open(
-      selectedMovie.trailer,
-      "_blank"
-    )
-  }
-  style={{
-    padding: "10px 20px",
-    backgroundColor: "red",
-    color: "white",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-  }}
->
-  ▶ Watch Trailer
-</button>
-            </a>
-          </div>
+              ▶ Watch Trailer
+            </button>
+          )}
 
           <hr />
 
@@ -275,7 +345,9 @@ function App() {
           <textarea
             rows="4"
             value={review}
-            onChange={(e) => setReview(e.target.value)}
+            onChange={(e) =>
+              setReview(e.target.value)
+            }
             style={{
               width: "100%",
             }}
@@ -300,10 +372,14 @@ function App() {
 
           {reviews
             .filter(
-              (r) => r.movie === selectedMovie.title
+              (r) =>
+                r.movie ===
+                selectedMovie.title
             )
             .map((r, index) => (
-              <p key={index}>⭐ {r.text}</p>
+              <p key={index}>
+                ⭐ {r.text}
+              </p>
             ))}
         </div>
       )}
