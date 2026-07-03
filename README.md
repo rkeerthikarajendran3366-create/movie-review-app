@@ -1,16 +1,80 @@
-# React + Vite
+# 🎬 Movie Review App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📖 About the Project
 
-Currently, two official plugins are available:
+Movie Review App is a React application where users can browse movies, search for movies, view movie details, watch trailers, rate movies, and write reviews.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application stores user reviews and ratings using Local Storage, so they remain even after refreshing the page.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- Search movies
+- Browse movie collection
+- Filter movies by genre
+- View movie details
+- Watch movie trailers on YouTube
+- Give star ratings
+- Write movie reviews
+- Reviews saved using Local Storage
+- Ratings saved using Local Storage
+- Responsive Design
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠 Technologies Used
+
+- React JS
+- Vite
+- JavaScript
+- HTML
+- CSS
+- Local Storage
+
+---
+
+## 📂 Folder Structure
+
+```
+src/
+│
+├── App.jsx
+├── movies.js
+├── App.css
+├── main.jsx
+```
+
+---
+
+## ▶️ Installation
+
+Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_LINK
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Start the project
+
+```bash
+npm run dev
+```
+
+---
+
+## 🎥 Screenshots
+
+You can add screenshots of your application here.
+
+---
+
+## 👩‍💻 Author
+
+Keerthi R
