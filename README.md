@@ -71,10 +71,10 @@ npm run dev
 
 ## 🎥 Screenshots
 
-You can add screenshots of your application here.
+![Home Page](images/home.png)
 
 ---
 
 ## 👩‍💻 Author
 
-Keerthi R
+Keerthika R
