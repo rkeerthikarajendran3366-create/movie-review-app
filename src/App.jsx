@@ -1,388 +1,157 @@
-import { useState, useEffect } from "react";
-import movies from "./movies";
+import { useEffect, useState } from "react";
+import "./App.css";
+import MovieCard from "./components/MovieCard";
+import MovieDetails from "./components/MovieDetails";
+
+const MOVIES_API =
+  "https://6a4b5ae8f5eab0bb6b62a0df.mockapi.io/api/movies";
 
 function App() {
+  const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [search, setSearch] = useState("");
-  const [genreFilter, setGenreFilter] = useState("All");
+  const [genre, setGenre] = useState("All");
+
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [review, setReview] = useState("");
 
-  // Load Reviews from Local Storage
-  const [reviews, setReviews] = useState(() => {
-    const savedReviews = localStorage.getItem("reviews");
-
-    return savedReviews
-      ? JSON.parse(savedReviews)
-      : [
-          {
-            movie: "Avatar",
-            text: "Amazing movie! ⭐⭐⭐⭐⭐",
-          },
-        ];
-  });
-
-  // Load Ratings from Local Storage
-  const [userRatings, setUserRatings] = useState(() => {
-    const savedRatings = localStorage.getItem("ratings");
-
-    return savedRatings
-      ? JSON.parse(savedRatings)
-      : {};
-  });
-
-  // Save Reviews
   useEffect(() => {
-    localStorage.setItem(
-      "reviews",
-      JSON.stringify(reviews)
-    );
-  }, [reviews]);
+    fetchMovies();
+  }, []);
 
-  // Save Ratings
   useEffect(() => {
-    localStorage.setItem(
-      "ratings",
-      JSON.stringify(userRatings)
+    filterMovies();
+  }, [movies, search, genre]);
+
+  async function fetchMovies() {
+    try {
+      const response = await fetch(MOVIES_API);
+
+      if (!response.ok) {
+        throw new Error("Unable to fetch movies");
+      }
+
+      const data = await response.json();
+
+      setMovies(data);
+      setFilteredMovies(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function filterMovies() {
+    let list = [...movies];
+
+    if (search.trim() !== "") {
+      list = list.filter((movie) =>
+        movie.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (genre !== "All") {
+      list = list.filter((movie) => movie.genre === genre);
+    }
+
+    setFilteredMovies(list);
+  }
+
+  const genres = [
+    "All",
+    ...new Set(movies.map((movie) => movie.genre))
+  ];
+
+  if (loading)
+    return (
+      <h2 className="center">
+        Loading Movies...
+      </h2>
     );
-  }, [userRatings]);
 
-  const addReview = () => {
-    if (!review.trim()) return;
+  if (error)
+    return (
+      <h2 className="center">
+        {error}
+      </h2>
+    );
 
-    setReviews([
-      ...reviews,
-      {
-        movie: selectedMovie.title,
-        text: review,
-      },
-    ]);
+  if (selectedMovie) {
+    return (
+      <MovieDetails
+        movie={selectedMovie}
+        goBack={() => {
+          setSelectedMovie(null);
 
-    setReview("");
-  };
-
-  const filteredMovies = movies.filter(
-    (movie) =>
-      movie.title
-        .toLowerCase()
-        .includes(search.toLowerCase()) &&
-      (genreFilter === "All" ||
-        movie.genre === genreFilter)
-  );
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }}
+      />
+    );
+  }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        padding: "20px",
-        background:
-          "linear-gradient(to right,#141E30,#243B55)",
-        color: "white",
-      }}
-    >
-      <h1
-        style={{
-          textAlign: "center",
-          color: "#FFD700",
-          fontSize: "60px",
-        }}
-      >
-        🎬 Movie Review App
+    <div className="container">
+
+      <h1 className="title">
+        🎬 Movie Explorer
       </h1>
 
-      <p style={{ textAlign: "center" }}>
-        Browse Movies • Read Reviews • Rate Movies
-      </p>
+      <div className="top-controls">
 
-      {!selectedMovie && (
-        <>
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "30px",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Search Movie..."
-              value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
-              style={{
-                padding: "10px",
-                width: "250px",
-                borderRadius: "10px",
+        <input
+          type="text"
+          placeholder="Search movie..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+        />
+
+        <select
+          value={genre}
+          onChange={(e) =>
+            setGenre(e.target.value)
+          }
+        >
+          {genres.map((g) => (
+            <option key={g}>
+              {g}
+            </option>
+          ))}
+        </select>
+
+      </div>
+
+      <div className="movie-grid">
+
+        {filteredMovies.length === 0 ? (
+          <h2>No Movies Found</h2>
+        ) : (
+          filteredMovies.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              onClick={() => {
+                setSelectedMovie(movie);
+
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
               }}
             />
+          ))
+        )}
 
-            <select
-              value={genreFilter}
-              onChange={(e) =>
-                setGenreFilter(e.target.value)
-              }
-              style={{
-                padding: "10px",
-                marginLeft: "10px",
-                borderRadius: "10px",
-              }}
-            >
-              <option value="All">
-                All Movies
-              </option>
-              <option value="Action">
-                Action
-              </option>
-              <option value="Comedy">
-                Comedy
-              </option>
-              <option value="Romance">
-                Romance
-              </option>
-              <option value="Sci-Fi">
-                Sci-Fi
-              </option>
-              <option value="Animation">
-                Animation
-              </option>
-              <option value="Drama">
-                Drama
-              </option>
-            </select>
-          </div>
+      </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit,minmax(250px,1fr))",
-              gap: "20px",
-            }}
-          >
-            {filteredMovies.map((movie) => (
-              <div
-                key={movie.id}
-                style={{
-                  backgroundColor:
-                    "rgba(0,0,0,0.7)",
-                  padding: "15px",
-                  borderRadius: "15px",
-                }}
-              >
-                <img
-                  src={movie.image}
-                  alt={movie.title}
-                  style={{
-                    width: "100%",
-                    height: "350px",
-                    objectFit: "cover",
-                    borderRadius: "10px",
-                  }}
-                />
-
-                <h2
-                  style={{
-                    color: "#FFD700",
-                  }}
-                >
-                  {movie.title}
-                </h2>
-
-                <p>{movie.genre}</p>
-
-                <p>
-                  ⭐ {movie.rating}/10
-                </p>
-
-                <div>
-                  {[1, 2, 3, 4, 5].map(
-                    (star) => (
-                      <span
-                        key={star}
-                        onClick={() =>
-                          setUserRatings({
-                            ...userRatings,
-                            [movie.id]: star,
-                          })
-                        }
-                        style={{
-                          cursor: "pointer",
-                          fontSize: "28px",
-                          color:
-                            userRatings[
-                              movie.id
-                            ] >= star
-                              ? "gold"
-                              : "gray",
-                        }}
-                      >
-                        ★
-                      </span>
-                    )
-                  )}
-                </div>
-
-                <button
-                  onClick={() =>
-                    setSelectedMovie(movie)
-                  }
-                  style={{
-                    width: "100%",
-                    marginTop: "10px",
-                    padding: "10px",
-                    backgroundColor:
-                      "#FFD700",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  View Details
-                </button>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {selectedMovie && (
-        <div
-          style={{
-            backgroundColor: "#222",
-            padding: "20px",
-            borderRadius: "15px",
-          }}
-        >
-          <button
-            onClick={() =>
-              setSelectedMovie(null)
-            }
-            style={{
-              padding: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            ⬅ Back to Home
-          </button>
-
-          <h2
-            style={{
-              color: "#FFD700",
-            }}
-          >
-            {selectedMovie.title}
-          </h2>
-
-          <img
-            src={selectedMovie.image}
-            alt={selectedMovie.title}
-            style={{
-              width: "250px",
-              borderRadius: "10px",
-            }}
-          />
-
-          <p>
-            <strong>Year:</strong>{" "}
-            {selectedMovie.year}
-          </p>
-
-          <p>
-            <strong>Genre:</strong>{" "}
-            {selectedMovie.genre}
-          </p>
-
-          <p>
-            <strong>Director:</strong>{" "}
-            {selectedMovie.director}
-          </p>
-
-          <p>
-            <strong>Cast:</strong>{" "}
-            {selectedMovie.cast}
-          </p>
-
-          <p>
-            <strong>Duration:</strong>{" "}
-            {selectedMovie.duration}
-          </p>
-
-          <p>
-            <strong>IMDb:</strong>{" "}
-            {selectedMovie.rating}/10
-          </p>
-
-          <h3>Story</h3>
-
-          <p>
-            {selectedMovie.description}
-          </p>
-
-          {selectedMovie.trailer && (
-            <button
-              onClick={() =>
-                window.open(
-                  selectedMovie.trailer,
-                  "_blank"
-                )
-              }
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-            >
-              ▶ Watch Trailer
-            </button>
-          )}
-
-          <hr />
-
-          <h3>Write Review</h3>
-
-          <textarea
-            rows="4"
-            value={review}
-            onChange={(e) =>
-              setReview(e.target.value)
-            }
-            style={{
-              width: "100%",
-            }}
-          />
-
-          <br />
-          <br />
-
-          <button
-            onClick={addReview}
-            style={{
-              padding: "10px",
-              backgroundColor: "#FFD700",
-              border: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Submit Review
-          </button>
-
-          <h3>User Reviews</h3>
-
-          {reviews
-            .filter(
-              (r) =>
-                r.movie ===
-                selectedMovie.title
-            )
-            .map((r, index) => (
-              <p key={index}>
-                ⭐ {r.text}
-              </p>
-            ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -1,25 +1,22 @@
-# 🎬 Movie Review App
+# 🎬 Movie Explorer
 
-## 📖 About the Project
+A modern movie browsing application built using React.js.
 
-Movie Review App is a React application where users can browse movies, search for movies, view movie details, watch trailers, rate movies, and write reviews.
-
-The application stores user reviews and ratings using Local Storage, so they remain even after refreshing the page.
+Users can explore movies, search by title, filter by genre, view movie details, watch trailers, and add ratings and reviews.
 
 ---
 
 ## 🚀 Features
 
-- Search movies
-- Browse movie collection
-- Filter movies by genre
-- View movie details
-- Watch movie trailers on YouTube
-- Give star ratings
-- Write movie reviews
-- Reviews saved using Local Storage
-- Ratings saved using Local Storage
-- Responsive Design
+- 🎬 Display movie collection
+- 🔍 Search movies by title
+- 🎭 Filter movies by genre
+- 📄 View complete movie details
+- ▶ Watch movie trailers
+- ⭐ Add movie ratings
+- 💬 Write and display reviews
+- 📱 Responsive design for mobile and desktop
+- ✨ Modern cinematic UI design
 
 ---
 
@@ -27,54 +24,79 @@ The application stores user reviews and ratings using Local Storage, so they rem
 
 - React JS
 - Vite
-- JavaScript
-- HTML
-- CSS
-- Local Storage
+- JavaScript (ES6+)
+- HTML5
+- CSS3
+- Mock API
+- React Hooks
+  - useState
+  - useEffect
 
 ---
 
-## 📂 Folder Structure
+## 🔗 API Used
 
-```
+### Movies API
+https://6a4b5ae8f5eab0bb6b62a0df.mockapi.io/api/movies
+
+
+### Reviews API
+
+
+https://6a4b5ae8f5eab0bb6b62a0df.mockapi.io/api/reviews
+
+
+---
+
+## 📂 Project Structure
+
+
 src/
 │
+├── components/
+│ ├── MovieCard.jsx
+│ ├── MovieDetails.jsx
+│ └── ReviewForm.jsx
+│
 ├── App.jsx
-├── movies.js
 ├── App.css
-├── main.jsx
-```
+├── index.css
+└── main.jsx
+
 
 ---
 
-## ▶️ Installation
+## ⚙️ Installation & Setup
 
-Clone the repository
+Clone the repository:
 
 ```bash
 git clone YOUR_GITHUB_REPOSITORY_LINK
-```
 
-Install dependencies
+Go into the project folder:
 
-```bash
+cd movie-review-app
+
+Install dependencies:
+
 npm install
-```
 
-Start the project
+Run the application:
 
-```bash
 npm run dev
-```
+📸 Screenshots
+Home page
+Movie details page
+Review section
 
----
+🎯 Future Improvements
+User authentication
+Favourite movies
+Watchlist feature
+Movie recommendations
+Pagination
+Dark/light theme
 
-## 🎥 Screenshots
-
-![Home Page](images/home.png)
-
----
-
-## 👩‍💻 Author
+👩‍💻 Author
 
 Keerthika R
