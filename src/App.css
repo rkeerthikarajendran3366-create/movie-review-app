@@ -6,6 +6,7 @@
 
 
 body {
+
   background:
     radial-gradient(circle at top, #312e81, #020617 60%);
 
@@ -14,14 +15,16 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
 
   min-height: 100vh;
+
 }
 
 
-/* Main Container */
+/* Main App Container */
 
-.container {
+.app {
 
   width: 90%;
+
   max-width: 1300px;
 
   margin: auto;
@@ -32,9 +35,9 @@ body {
 
 
 
-/* Movie Explorer Title */
+/* Title */
 
-.title {
+.app h1 {
 
   text-align: center;
 
@@ -47,12 +50,10 @@ body {
   letter-spacing: 2px;
 
 
-  background: linear-gradient(
-    90deg,
-    #38bdf8,
-    #a855f7,
-    #f472b6
-  );
+  background: linear-gradient(90deg,
+      #38bdf8,
+      #a855f7,
+      #f472b6);
 
 
   -webkit-background-clip: text;
@@ -63,84 +64,139 @@ body {
 
 
 
-/* Loading / Error */
-
-.center {
-
-  text-align:center;
-
-  margin-top:100px;
-
-  font-size:30px;
-
-}
 
 
+/* Search Box */
 
-/* Search Area */
+.search-box {
 
-.top-controls {
+  display: flex;
 
-  display:flex;
+  justify-content: center;
 
-  justify-content:center;
+  align-items: center;
 
-  gap:20px;
+  gap: 15px;
 
-  margin-bottom:40px;
+  margin-bottom: 40px;
 
-  flex-wrap:wrap;
+  flex-wrap: wrap;
 
 }
 
 
 
-.top-controls input,
-.top-controls select {
+.search-box input {
 
 
-  padding:14px 20px;
-
-  width:280px;
+  width: 350px;
 
 
-  border:none;
-
-  outline:none;
-
-  border-radius:30px;
+  padding: 14px 20px;
 
 
-  font-size:16px;
+  border: none;
 
 
-  background:rgba(255,255,255,0.12);
+  outline: none;
 
-  color:white;
 
-  backdrop-filter:blur(12px);
+  border-radius: 30px;
+
+
+  font-size: 16px;
+
+
+  background: rgba(255, 255, 255, 0.12);
+
+
+  color: white;
+
+
+  backdrop-filter: blur(12px);
 
 
   box-shadow:
-  0 8px 20px rgba(0,0,0,0.3);
+    0 8px 20px rgba(0, 0, 0, 0.3);
 
 }
 
 
 
-.top-controls input::placeholder{
+.search-box input::placeholder {
 
-  color:#cbd5e1;
+  color: #cbd5e1;
 
 }
 
 
 
-.top-controls select {
 
-  cursor:pointer;
+.search-box button {
 
-  background:#7c3aed;
+
+  padding: 14px 30px;
+
+
+  border: none;
+
+
+  border-radius: 30px;
+
+
+  background:
+
+    linear-gradient(90deg,
+      #38bdf8,
+      #8b5cf6);
+
+
+  color: white;
+
+
+  font-size: 16px;
+
+
+  cursor: pointer;
+
+
+  transition: 0.3s;
+
+}
+
+
+
+.search-box button:hover {
+
+
+  transform: scale(1.05);
+
+
+  box-shadow:
+    0 0 20px #38bdf8;
+
+
+}
+
+
+
+
+
+/* Loading and Error */
+
+h3 {
+
+  text-align: center;
+
+  margin: 30px;
+
+}
+
+
+
+.error {
+
+  color: #f87171;
 
 }
 
@@ -153,12 +209,16 @@ body {
 
 .movie-grid {
 
-  display:grid;
+
+  display: grid;
+
 
   grid-template-columns:
-  repeat(auto-fit,minmax(260px,1fr));
+    repeat(auto-fit, minmax(250px, 1fr));
 
-  gap:30px;
+
+  gap: 30px;
+
 
 }
 
@@ -171,26 +231,27 @@ body {
 
 .movie-card {
 
+
   background:
 
-  linear-gradient(
-    145deg,
-    #1e293b,
-    #0f172a
-  );
+    linear-gradient(145deg,
+      #1e293b,
+      #0f172a);
 
 
-  border-radius:20px;
-
-  overflow:hidden;
+  border-radius: 20px;
 
 
-  transition:0.4s;
+  overflow: hidden;
+
+
+  transition: 0.4s;
 
 
   box-shadow:
 
-  0 10px 30px rgba(0,0,0,0.5);
+    0 10px 30px rgba(0, 0, 0, 0.5);
+
 
 }
 
@@ -198,54 +259,118 @@ body {
 
 .movie-card:hover {
 
+
   transform:
 
-  translateY(-12px)
-  scale(1.02);
+    translateY(-12px) scale(1.02);
 
 
   box-shadow:
 
-  0 20px 40px rgba(56,189,248,0.25);
+    0 20px 40px rgba(56, 189, 248, 0.25);
+
 
 }
 
 
 
+
+
+/* Movie Image */
 
 
 .movie-image {
 
 
-  width:100%;
+  width: 100%;
 
-  height:380px;
 
-  object-fit:cover;
+  height: 380px;
+
+
+  object-fit: cover;
 
 
 }
 
 
+
+
+
+/* Image Container */
+
+
+.image-container {
+
+
+  position: relative;
+
+
+}
+
+
+
+
+/* IMDb Badge */
+
+
+.rating-badge {
+
+
+  position: absolute;
+
+
+  top: 15px;
+
+
+  right: 15px;
+
+
+  background: #facc15;
+
+
+  color: black;
+
+
+  padding: 8px 12px;
+
+
+  border-radius: 20px;
+
+
+  font-weight: bold;
+
+
+}
+
+
+
+
+
+/* Movie Content */
 
 
 .movie-content {
 
 
-  padding:22px;
+  padding: 22px;
+
 
 }
-
 
 
 
 .movie-content h2 {
 
 
-  margin-bottom:15px;
+  margin-bottom: 15px;
 
 
-  color:#f8fafc;
+  color: #f8fafc;
+
+
+  font-size: 22px;
+
 
 }
 
@@ -255,11 +380,25 @@ body {
 .movie-content p {
 
 
-  margin-bottom:10px;
+  margin-bottom: 15px;
 
-  color:#cbd5e1;
+
+  color: #cbd5e1;
+
 
 }
+
+
+
+
+.details-btn {
+
+
+  width: 100%;
+
+
+}
+
 
 
 
@@ -272,100 +411,115 @@ button {
 
   background:
 
-  linear-gradient(
-    90deg,
-    #38bdf8,
-    #8b5cf6
-  );
+    linear-gradient(90deg,
+      #38bdf8,
+      #8b5cf6);
 
 
-  color:white;
+  color: white;
 
 
-  border:none;
+  border: none;
 
 
-  padding:12px 22px;
+  padding: 12px 22px;
 
 
-  border-radius:25px;
+  border-radius: 25px;
 
 
-  cursor:pointer;
+  cursor: pointer;
 
 
-  font-size:15px;
+  font-size: 15px;
 
 
-  transition:0.3s;
+  transition: 0.3s;
 
 
 }
-
 
 
 
 button:hover {
 
 
-  transform:scale(1.05);
+  transform: scale(1.05);
 
 
-  box-shadow:
+}
 
-  0 0 20px #38bdf8;
+/* Movie IMDb Rating Badge */
 
+.movie-rating {
+
+  display: inline-block;
+
+  background: #facc15;
+
+  color: black;
+
+  padding: 6px 14px;
+
+  border-radius: 20px;
+
+  font-weight: bold;
+
+  margin: 10px 0;
 
 }
 
 
 
-
-
-/* Details Page */
+/* Movie Details */
 
 
 .details-page {
 
 
-  max-width:900px;
+  max-width: 900px;
 
-  margin:auto;
 
-  padding:30px;
+  margin: auto;
+
+
+  padding: 30px;
 
 
 }
+
 
 
 
 .details-image {
 
 
-  width:100%;
-
-  max-height:600px;
-
-  object-fit:cover;
+  width: 100%;
 
 
-  border-radius:20px;
+  max-height: 600px;
 
 
-  margin-bottom:30px;
+  object-fit: cover;
+
+
+  border-radius: 20px;
+
+
+  margin-bottom: 30px;
 
 
 }
 
 
 
-
 .details-page h1 {
 
 
-  font-size:2.5rem;
+  font-size: 2.5rem;
 
-  margin-bottom:20px;
+
+  margin-bottom: 20px;
 
 
 }
@@ -375,11 +529,15 @@ button:hover {
 .details-page p {
 
 
-  line-height:1.8;
+  line-height: 1.8;
 
-  color:#cbd5e1;
+
+  color: #cbd5e1;
+
 
 }
+
+
 
 
 
@@ -389,7 +547,7 @@ button:hover {
 .review-form {
 
 
-  margin-top:40px;
+  margin-top: 40px;
 
 
 }
@@ -399,11 +557,13 @@ button:hover {
 .review-form form {
 
 
-  display:flex;
+  display: flex;
 
-  flex-direction:column;
 
-  gap:15px;
+  flex-direction: column;
+
+
+  gap: 15px;
 
 
 }
@@ -415,16 +575,17 @@ button:hover {
 .review-form select {
 
 
-  padding:14px;
+  padding: 14px;
 
 
-  border:none;
+  border: none;
 
 
-  border-radius:12px;
+  border-radius: 12px;
 
 
-  font-size:16px;
+  font-size: 16px;
+
 
 }
 
@@ -433,12 +594,11 @@ button:hover {
 .review-form textarea {
 
 
-  min-height:130px;
-
-  resize:vertical;
+  min-height: 130px;
 
 
 }
+
 
 
 
@@ -449,7 +609,7 @@ button:hover {
 .reviews {
 
 
-  margin-top:50px;
+  margin-top: 50px;
 
 
 }
@@ -461,19 +621,19 @@ button:hover {
 
   background:
 
-  rgba(255,255,255,0.08);
+    rgba(255, 255, 255, 0.08);
 
 
-  backdrop-filter:blur(10px);
+  backdrop-filter: blur(10px);
 
 
-  padding:20px;
+  padding: 20px;
 
 
-  border-radius:15px;
+  border-radius: 15px;
 
 
-  margin-top:20px;
+  margin-top: 20px;
 
 
 }
@@ -483,9 +643,7 @@ button:hover {
 .review-card h3 {
 
 
-  color:#38bdf8;
-
-  margin-bottom:10px;
+  color: #38bdf8;
 
 
 }
@@ -496,7 +654,7 @@ button:hover {
 
 a {
 
- text-decoration:none;
+  text-decoration: none;
 
 }
 
@@ -507,64 +665,118 @@ a {
 /* Responsive */
 
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
 
-.title{
+  .app {
 
- font-size:2rem;
+    width: 95%;
+
+  }
+
+
+  .app h1 {
+
+
+    font-size: 2rem;
+
+
+  }
+
+
+
+  .search-box input {
+
+
+    width: 100%;
+
+
+  }
+
+
+  .movie-image {
+
+
+    height: 320px;
+
+
+  }
+
 
 }
 
 
-.movie-image{
 
- height:320px;
+@media(max-width:480px) {
+
+
+  .app h1 {
+
+
+    font-size: 1.6rem;
+
+
+  }
+
+
+
+  .movie-image {
+
+
+    height: 280px;
+
+
+  }
+
+
+  .search-box button {
+
+
+    width: 100%;
+
+
+  }
+
+
+}
+
+/* Movie IMDb Rating Badge */
+
+.movie-rating {
+
+  display: inline-block;
+
+  background: #facc15;
+
+  color: black;
+
+  padding: 6px 14px;
+
+  border-radius: 20px;
+
+  font-weight: bold;
+
+  margin: 10px 0;
 
 }
 
 
-.top-controls input,
-.top-controls select{
+/* Movie Genre Badge */
 
- width:100%;
+.genre-badge {
 
-}
+  background: #8b5cf6;
 
+  color: white;
 
-}
+  padding: 6px 12px;
 
+  border-radius: 20px;
 
+  display: inline-block;
 
-@media(max-width:480px){
+  margin: 8px 0;
 
-
-.container{
-
- width:95%;
-
-}
-
-
-.title{
-
- font-size:1.6rem;
-
-}
-
-
-.movie-image{
-
- height:280px;
-
-}
-
-
-button{
-
- width:100%;
-
-}
-
+  font-size: 14px;
 
 }

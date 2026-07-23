@@ -1,234 +1,590 @@
-import { useEffect, useState } from "react";
-import ReviewForm from "./ReviewForm";
-
-const REVIEW_API =
-    "https://6a4b5ae8f5eab0bb6b62a0df.mockapi.io/api/reviews";
+function MovieDetails({ movie, goBack, addReview }) {
 
 
-function MovieDetails({ movie, goBack }) {
+  const [details, setDetails] = useState(null);
 
-    const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
-
-    useEffect(() => {
-        fetchReviews();
-    }, [movie.id]);
+  const [loading, setLoading] = useState(true);
 
 
 
-    async function fetchReviews() {
+  useEffect(() => {
 
-        try {
+    fetchMovieDetails();
 
-            const res = await fetch(REVIEW_API);
+    loadReviews();
 
-            const data = await res.json();
-
-
-            setReviews(
-                data.filter(
-                    (r) =>
-                        String(r.movieId) === String(movie.id)
-                )
-            );
+  }, [movie.imdbID]);
 
 
-        } catch (err) {
 
-            console.log(err);
 
-        }
+
+
+  async function fetchMovieDetails() {
+
+
+    try {
+
+
+      setLoading(true);
+
+
+
+      const response = await fetch(
+
+        `https://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}&plot=full`
+
+      );
+
+
+
+      const data = await response.json();
+
+
+
+
+      if(data.Response === "True"){
+
+        setDetails(data);
+
+      }
+      else{
+
+        setDetails(null);
+
+      }
+
+
+
+    }
+
+    catch(error){
+
+
+      console.log(error);
+
+      setDetails(null);
+
+
+    }
+
+    finally{
+
+
+      setLoading(false);
+
 
     }
 
 
+  }
 
-    function addReview(review) {
 
-        setReviews((prev) => [
-            ...prev,
-            review
-        ]);
+
+
+
+
+
+  function loadReviews(){
+
+
+    const saved =
+
+      JSON.parse(
+
+        localStorage.getItem(movie.imdbID)
+
+      ) || [];
+
+
+
+    setReviews(saved);
+
+
+  }
+
+
+
+
+
+
+
+  // ⭐ Star Rating Review Save Logic
+
+
+  function handleAddReview(review){
+
+
+
+    const newReview = {
+
+
+      id: Date.now(),
+
+      name: review.name,
+
+      review: review.review,
+
+      rating: review.rating
+
+
+    };
+
+
+
+
+    const updatedReviews = [
+
+      ...reviews,
+
+      newReview
+
+    ];
+
+
+
+
+    setReviews(updatedReviews);
+
+
+
+
+
+    localStorage.setItem(
+
+      movie.imdbID,
+
+      JSON.stringify(updatedReviews)
+
+    );
+
+
+
+    // update App state also
+
+    if(addReview){
+
+      addReview(review);
 
     }
 
+
+  }
+
+
+
+
+
+
+
+
+  // Back Button Logic
+
+
+  function handleBack(){
+
+
+    if(goBack){
+
+
+      goBack();
+
+
+    }
+
+
+  }
+
+
+
+
+
+
+
+
+
+  if(loading){
 
 
     return (
 
-        <div className="details-page">
+      <h2 className="center">
 
+        Loading Movie Details...
 
-            <button
-                className="back-btn"
-                onClick={goBack}
-            >
-                ← Back to Movies
-            </button>
+      </h2>
 
+    );
 
 
-            <div className="details-hero">
+  }
 
 
-                <img
-                    src={movie.image}
-                    alt={movie.title}
-                    className="details-image"
-                />
 
 
-            </div>
 
 
+  if(!details){
 
 
-            <div className="details-content">
+    return (
 
+      <h2 className="center">
 
-                <h1>
-                    {movie.title}
-                </h1>
+        Movie Not Found
 
+      </h2>
 
+    );
 
-                <div className="movie-info">
 
+  }
 
-                    <span>
-                        🎭 {movie.genre}
-                    </span>
 
 
-                    <span>
-                        📅 {movie.year}
-                    </span>
 
 
-                    <span>
-                        ⭐ {movie.rating}
-                    </span>
 
 
-                </div>
 
+  return (
 
 
 
-                <p className="description">
+    <div className="details-page">
 
-                    {movie.description}
 
-                </p>
 
 
 
+      {/* Back Button */}
 
 
-                {movie.trailer && (
+      <button
 
-                    <a
-                        href={movie.trailer}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
+        className="back-btn"
 
-                        <button className="trailer-btn">
+        onClick={handleBack}
 
-                            ▶ Watch Trailer
+      >
 
-                        </button>
+        ⬅ Back to Movies
 
+      </button>
 
-                    </a>
 
-                )}
 
 
 
-            </div>
 
 
+      <div className="details-hero">
 
 
+        <img
 
-            <ReviewForm
+          src={
 
-                movieId={movie.id}
+            details.Poster && details.Poster !== "N/A"
 
-                onReviewAdded={addReview}
+            ?
 
-            />
+            details.Poster
 
+            :
 
+            "https://placehold.co/300x450?text=No+Poster"
 
+          }
 
 
+          alt={details.Title}
 
-            <div className="reviews">
 
+          className="details-image"
 
-                <h2>
-                    ⭐ User Reviews
-                </h2>
 
+        />
 
 
+      </div>
 
-                {reviews.length === 0 ? (
 
-                    <p>
-                        No Reviews Yet. Be the first!
-                    </p>
 
 
-                ) : (
 
 
-                    reviews.map((review) => (
 
+      <div className="details-content">
 
-                        <div
-                            key={review.id}
-                            className="review-card"
-                        >
 
 
-                            <h3>
-                                👤 {review.name}
-                            </h3>
+        <h1>
 
+          {details.Title}
 
+        </h1>
 
-                            <p>
-                                ⭐ {review.rating}/5
-                            </p>
 
 
 
-                            <p>
-                                {review.review}
-                            </p>
 
 
 
-                        </div>
+        <div className="movie-info">
 
 
-                    ))
+          <span>
 
-                )}
+            🎭 <b>Genre:</b> {details.Genre}
 
+          </span>
 
 
-            </div>
+
+          <span>
+
+            📅 <b>Year:</b> {details.Year}
+
+          </span>
+
+
+
+          <span>
+
+            ⭐ IMDb {details.imdbRating}
+
+          </span>
 
 
         </div>
 
-    );
+
+
+
+
+
+
+        <p className="description">
+
+          {details.Plot}
+
+        </p>
+
+
+
+
+
+
+        <p>
+          🎬 <b>Director:</b> {details.Director}
+        </p>
+
+
+        <p>
+          ✍️ <b>Writer:</b> {details.Writer}
+        </p>
+
+
+        <p>
+          👥 <b>Actors:</b> {details.Actors}
+        </p>
+
+
+        <p>
+          📆 <b>Released:</b> {details.Released}
+        </p>
+
+
+        <p>
+          ⏱️ <b>Runtime:</b> {details.Runtime}
+        </p>
+
+
+        <p>
+          🌐 <b>Language:</b> {details.Language}
+        </p>
+
+
+        <p>
+          🏆 <b>Awards:</b> {details.Awards}
+        </p>
+
+
+
+
+
+
+
+        <a
+
+          href={
+
+          `https://www.youtube.com/results?search_query=${encodeURIComponent(
+            details.Title + " official trailer"
+          )}`
+
+          }
+
+
+          target="_blank"
+
+          rel="noreferrer"
+
+        >
+
+
+          <button className="trailer-btn">
+
+            ▶ Watch Trailer
+
+          </button>
+
+
+
+        </a>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+      {/* Review + Star Rating */}
+
+
+      <ReviewForm
+
+        movieId={movie.imdbID}
+
+        onReviewAdded={handleAddReview}
+
+      />
+
+
+
+
+
+
+
+
+
+      {/* Reviews Display */}
+
+
+
+      <div className="reviews">
+
+
+        <h2>
+
+          ⭐ User Reviews
+
+        </h2>
+
+
+
+
+
+
+        {
+
+        reviews.length === 0
+
+
+        ?
+
+
+        (
+
+          <p>
+
+            No Reviews Yet. Be the first!
+
+          </p>
+
+
+        )
+
+
+        :
+
+
+        reviews.map(review=>(
+
+
+
+          <div
+
+            className="review-card"
+
+            key={review.id}
+
+          >
+
+
+            <h3>
+
+              👤 {review.name}
+
+            </h3>
+
+
+
+            <p>
+
+              {"⭐".repeat(review.rating)}
+
+              {"☆".repeat(5-review.rating)}
+
+            </p>
+
+
+
+
+            <p>
+
+              {review.review}
+
+            </p>
+
+
+
+          </div>
+
+
+
+        ))
+
+        }
+
+
+
+      </div>
+
+
+
+
+
+
+
+    </div>
+
+
+  );
 
 }
+
 
 
 export default MovieDetails;
